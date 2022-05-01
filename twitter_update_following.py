@@ -1,4 +1,4 @@
-# twitter_update_followers.py -- Retrieves a list of the people you follow on Twitter, and stores it in the text file twitter_following.txt
+# twitter_update_following.py -- Retrieves a list of the people you follow on Twitter, and stores it in the text file twitter_following.txt
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
 import os
