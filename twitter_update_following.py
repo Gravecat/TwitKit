@@ -75,8 +75,11 @@ while True:
         break
     except tweepy.TooManyRequests:
         print('Twitter API rate limit reached. Sleeping for 15 minutes...')
-        time.sleep(900)
-        user = next(user)
+        for i in range(0, 15):
+            time.sleep(60)
+            print('.', end = '')
+        print('\n')
+        user = next(friends)
         list.write(user.screen_name + '\n')
         friend_count += 1
     except:
