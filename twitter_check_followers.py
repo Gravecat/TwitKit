@@ -1,4 +1,4 @@
-# twitter_update_following.py -- Retrieves a list of the people you follow on Twitter, and stores it in the text file twitter_following.txt
+# twitter_check_followers.py -- Retrieves a list of the people who follow you on Twitter, and optionally compares to a previous list to check for new followers/unfollowers.
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
 import os
@@ -28,6 +28,17 @@ except OSError:
     exit()
 
 try:
+    followers_old_file = open(os.path.dirname(__file__) + '\\twitter_followers_old.txt', 'r')
+    followers_old = followers_old_file.readlines()
+    followers_old = set([i.replace('\n', '') for i in followers_old])
+    followers_old_file.close()
+except:
+    if wait_before_exit:
+        print('\nPlease press Enter to quit.')
+        input()
+    exit()
+
+try:
     auth = tweepy.auth.OAuth1UserHandler(api_key, api_secret)
     auth.set_access_token(access_token, access_secret)
     api = tweepy.API(auth)
@@ -47,7 +58,11 @@ except:
     exit()
 
 try:
-    list = open(os.path.dirname(__file__) + '/twitter_following.txt', 'w')
+    os.rename(os.path.dirname(__file__) + '/twitter_followers.txt', os.path.dirname(__file__) + '/twitter_followers_old.txt')
+except: pass
+
+try:
+    list = open(os.path.dirname(__file__) + '/twitter_followers.txt', 'w')
 except:
     print('Could not open file for writing!')
     if wait_before_exit:
@@ -56,21 +71,21 @@ except:
     exit()
 
 try:
-    friends = tweepy.Cursor(api.get_friends, count = 100).items()
-    print('Processing friends list...')
+    followers = tweepy.Cursor(api.get_followers, count = 100).items()
+    print('Processing followers list...')
 except:
-    print('Could not retrieve following list fdrom Twitter API.')
+    print('Could not retrieve followers list fdrom Twitter API.')
     if wait_before_exit:
         print('\nPlease press Enter to quit.')
         input()
     exit()
-friend_count = 0
+follower_count = 0
 
 while True:
     try:
-        user = next(friends)
+        user = next(followers)
         list.write(user.screen_name + '\n')
-        friend_count += 1
+        follower_count += 1
     except StopIteration:
         break
     except tweepy.TooManyRequests:
@@ -78,7 +93,7 @@ while True:
         time.sleep(900)
         user = next(user)
         list.write(user.screen_name + '\n')
-        friend_count += 1
+        follower_count += 1
     except:
         print('Unexpected exception caight!')
         list.close()
@@ -88,7 +103,33 @@ while True:
         exit()
 
 list.close()
-print('Successfully updated following list. Processed', friend_count, 'friends.')
+print('Successfully updated following list. Processed', follower_count, 'followers.')
+
+followers_current_file = open(os.path.dirname(__file__) + '\\twitter_followers.txt', 'r')
+followers_current = followers_current_file.readlines()
+followers_current = set([i.replace('\n', '') for i in followers_current])
+followers_current_file.close()
+
+new_followers = followers_current - followers_old
+lost_followers = followers_old - followers_current
+new_follower_count = len(new_followers)
+lost_follower_count = len(lost_followers)
+
+if new_follower_count:
+    gained_str = '\nGained ' + str(new_follower_count) + ' new follower'
+    if (new_follower_count > 1): gained_str += 's: '
+    else: gained_str += ': '
+    print (gained_str + (', '.join(new_followers)))
+
+if lost_follower_count:
+    lost_str = '\nLost ' + str(lost_follower_count) + ' follower'
+    if (lost_follower_count > 1): lost_str += 's: '
+    else: lost_str += ': '
+    print(lost_str + (', '.join(lost_followers)))
+
+if not new_follower_count and not lost_follower_count:
+    print('\nNo followers gained or lost since last check.')
+
 if wait_before_exit:
     print('\nPlease press Enter to quit.')
     input()
