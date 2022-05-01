@@ -12,7 +12,7 @@ access_secret = ''  # Put your Twitter access secret token here.
 wait_before_exit = False    # Set this to True to wait for the user to press enter before exiting the script.
 
 try:
-    auth = tweepy.auth.OAuthHandler(api_key, api_secret)
+    auth = tweepy.auth.OAuth1UserHandler(api_key, api_secret)
     auth.set_access_token(access_token, access_secret)
     api = tweepy.API(auth)
     if (api.verify_credentials):
