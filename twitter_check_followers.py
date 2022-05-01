@@ -28,15 +28,17 @@ except OSError:
     exit()
 
 try:
-    followers_old_file = open(os.path.dirname(__file__) + '\\twitter_followers_old.txt', 'r')
-    followers_old = followers_old_file.readlines()
-    followers_old = set([i.replace('\n', '') for i in followers_old])
+    followers_old_file = open(os.path.dirname(__file__) + '\\twitter_followers.txt', 'r')
+    followers_old_data = followers_old_file.readlines()
+    followers_old_list = [i.replace('\n', '') for i in followers_old_data]
     followers_old_file.close()
+    followers_old_str = 'Successfully read ' + str(len(followers_old_list)) + ' follower'
+    if len(followers_old_list) != 0: followers_old_str += 's'
+    followers_old_str += ' from twitter_followers.txt.'
+    print(followers_old_str)
+    followers_old = set(followers_old_list)
 except:
-    if wait_before_exit:
-        print('\nPlease press Enter to quit.')
-        input()
-    exit()
+    followers_old = set()
 
 try:
     auth = tweepy.auth.OAuth1UserHandler(api_key, api_secret)
@@ -56,12 +58,6 @@ except:
         print('\nPlease press Enter to quit.')
         input()
     exit()
-
-try: os.remove(os.path.dirname(__file__) + '/twitter_followers_old.txt')
-except: pass
-
-try: os.rename(os.path.dirname(__file__) + '/twitter_followers.txt', os.path.dirname(__file__) + '/twitter_followers_old.txt')
-except: pass
 
 try:
     list = open(os.path.dirname(__file__) + '/twitter_followers.txt', 'w')
@@ -83,11 +79,13 @@ except:
     exit()
 follower_count = 0
 
+followers_current_list = []
 while True:
     try:
         user = next(followers)
         list.write(user.screen_name + '\n')
         follower_count += 1
+        followers_current_list.append(user.screen_name)
     except StopIteration:
         break
     except tweepy.TooManyRequests:
@@ -99,6 +97,7 @@ while True:
         user = next(followers)
         list.write(user.screen_name + '\n')
         follower_count += 1
+        followers_current_list.append(user.screen_name)
     except:
         print('Unexpected exception caight!')
         list.close()
@@ -109,11 +108,13 @@ while True:
 
 list.close()
 print('Successfully updated following list. Processed', follower_count, 'followers.')
+followers_current = set(followers_current_list)
 
-followers_current_file = open(os.path.dirname(__file__) + '\\twitter_followers.txt', 'r')
-followers_current = followers_current_file.readlines()
-followers_current = set([i.replace('\n', '') for i in followers_current])
-followers_current_file.close()
+if len(followers_old) == 0:
+    if wait_before_exit:
+        print('\nPlease press Enter to quit.')
+        input()
+    exit()
 
 new_followers = followers_current - followers_old
 lost_followers = followers_old - followers_current
