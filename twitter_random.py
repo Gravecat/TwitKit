@@ -5,7 +5,7 @@ import os
 import random
 import webbrowser
 
-tweets_only = True  # Set this to False to default to visiting the friend's page directly.
+tweets_only = False # Set this to True to default to only seeing the friend's tweets, not their retweets.
 
 friends = open(os.path.dirname(__file__) + '\\twitter_following.txt', 'r')
 lines = friends.readlines()
