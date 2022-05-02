@@ -2,140 +2,55 @@
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
 import os
-import time
-import tweepy
+import twitkit_common
 
-wait_before_exit = True     # Set this to False to no longer wait for the user to press Enter before exiting.
 
-try:
-    api_key_file = open(os.path.dirname(__file__) + '\\apikeys.txt', 'r')
-    key_lines = api_key_file.readlines()
-    api_key_file.close()
-    api_key = key_lines[0].strip('\n')
-    api_secret = key_lines[1].strip('\n')
-    access_token = key_lines[2].strip('\n')
-    access_secret = key_lines[3].strip('\n')
-except OSError:
-    print('Could not open apikeys.txt!')
-    print('To use this script, create a file called apikeys.txt in the same folder, with four lines of plain text. These should be, in order:')
-    print('Your Twitter API key (consumer key)')
-    print('Your Twitter API key secret (consumer key secret)')
-    print('Your Twitter access token')
-    print('Your Twitter access token secret')
-    print('Do not ever share these keys or tokens with anyone!')
-    print('\nPlease press Enter to quit.')
-    input()
-    exit()
+def main():
+    wait_before_exit = True     # Set this to False to no longer wait for the user to press Enter before exiting.
 
-try:
-    followers_old_file = open(os.path.dirname(__file__) + '\\twitter_followers.txt', 'r')
-    followers_old_data = followers_old_file.readlines()
-    followers_old_list = [i.replace('\n', '') for i in followers_old_data]
-    followers_old_file.close()
-    followers_old_str = 'Successfully read ' + str(len(followers_old_list)) + ' follower'
-    if len(followers_old_list) != 0: followers_old_str += 's'
-    followers_old_str += ' from twitter_followers.txt.'
-    print(followers_old_str)
-    followers_old = set(followers_old_list)
-except:
-    followers_old = set()
+    api = twitkit_common.get_api()
+    if (api == None): twitkit_common.done(wait_before_exit)
 
-try:
-    auth = tweepy.auth.OAuth1UserHandler(api_key, api_secret)
-    auth.set_access_token(access_token, access_secret)
-    api = tweepy.API(auth)
-    if (api.verify_credentials):
-        print('Logged into Twitter API successfully.')
-    else:
-        print('Could not verify Twitter API credentials.')
-        if wait_before_exit:
-            print('\nPlease press Enter to quit.')
-            input()
-        exit()
-except:
-    print('Could not verify Twitter API credentials.')
-    if wait_before_exit:
-        print('\nPlease press Enter to quit.')
-        input()
-    exit()
+    followers_old = twitkit_common.txt_to_set('twitter_followers.txt')
+    followers_old_count = len(followers_old)
+    if followers_old_count:
+        print('Successfully read {} follower{} from twitter_followers.txt'.format(followers_old_count, 's' if followers_old_count != 1 else ''))
 
-try:
-    list = open(os.path.dirname(__file__) + '/twitter_followers.txt', 'w')
-except:
-    print('Could not open file for writing!')
-    if wait_before_exit:
-        print('\nPlease press Enter to quit.')
-        input()
-    exit()
+    follower_set, follower_count = twitkit_common.get_friends(api.get_followers, 'followers')
 
-try:
-    followers = tweepy.Cursor(api.get_followers, count = 100).items()
-    print('Processing followers list...')
-except:
-    print('Could not retrieve followers list fdrom Twitter API.')
-    if wait_before_exit:
-        print('\nPlease press Enter to quit.')
-        input()
-    exit()
-follower_count = 0
-
-followers_current_list = []
-while True:
     try:
-        user = next(followers)
-        list.write(user.screen_name + '\n')
-        follower_count += 1
-        followers_current_list.append(user.screen_name)
-    except StopIteration:
-        break
-    except tweepy.TooManyRequests:
-        print('Twitter API rate limit reached. Sleeping for 15 minutes...')
-        for i in range(0, 15):
-            time.sleep(60)
-            print('.', end = '')
-        print('\n')
-        user = next(followers)
-        list.write(user.screen_name + '\n')
-        follower_count += 1
-        followers_current_list.append(user.screen_name)
+        list_file = open(os.path.dirname(__file__) + '/twitter_followers.txt', 'w')
+        for follower in follower_set:
+            list_file.write(follower + '\n')
+        list_file.close()
+        print('Successfully updated following list. Processed {} follower{}.'.format(follower_count, 's' if follower_count != 1 else ''))
     except:
-        print('Unexpected exception caight!')
-        list.close()
-        if wait_before_exit:
-            print('\nPlease press Enter to quit.')
-            input()
-        exit()
+        print('Could not open file for writing!')
+        twitkit_common.done(wait_before_exit)
 
-list.close()
-print('Successfully updated following list. Processed', follower_count, 'followers.')
-followers_current = set(followers_current_list)
+    if not followers_old_count: twitkit_common.done(wait_before_exit)
 
-if len(followers_old) == 0:
-    if wait_before_exit:
-        print('\nPlease press Enter to quit.')
-        input()
-    exit()
+    new_followers = follower_set - followers_old
+    lost_followers = followers_old - follower_set
+    new_follower_count = len(new_followers)
+    lost_follower_count = len(lost_followers)
 
-new_followers = followers_current - followers_old
-lost_followers = followers_old - followers_current
-new_follower_count = len(new_followers)
-lost_follower_count = len(lost_followers)
+    if new_follower_count:
+        print('\nGained {} new follower{}: {}'.format(
+            new_follower_count,
+            's' if new_follower_count != 1 else '',
+            ', '.join(new_followers)))
 
-if new_follower_count:
-    gained_str = '\nGained ' + str(new_follower_count) + ' new follower'
-    if (new_follower_count > 1): gained_str += 's: '
-    else: gained_str += ': '
-    print (gained_str + (', '.join(new_followers)))
+    if lost_follower_count:
+        print('\nLost {} follower{}: {}'.format(
+            lost_follower_count,
+            's' if lost_follower_count != 1 else '',
+            ', '.join(lost_followers)))
 
-if lost_follower_count:
-    lost_str = '\nLost ' + str(lost_follower_count) + ' follower'
-    if (lost_follower_count > 1): lost_str += 's: '
-    else: lost_str += ': '
-    print(lost_str + (', '.join(lost_followers)))
+    if not new_follower_count and not lost_follower_count:
+        print('\nNo followers gained or lost since last check.')
 
-if not new_follower_count and not lost_follower_count:
-    print('\nNo followers gained or lost since last check.')
+    twitkit_common.done(wait_before_exit)
 
-if wait_before_exit:
-    print('\nPlease press Enter to quit.')
-    input()
+
+if __name__ == '__main__': main()

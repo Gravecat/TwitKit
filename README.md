@@ -1,6 +1,6 @@
 # TwitKit
 
-These are some Python tools I've written for interacting with the Twitter website. You will need to provide your own API key and access token to use the scripts here. If you do not already have an API key, you'll have to sign up for [a developer account](https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api).
+These are some Python tools I've written for interacting with the Twitter website. You will need to provide your own API key and access token to make full use of the scripts here. If you do not already have an API key, you'll have to sign up for [a developer account](https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api). Alternatively, you can use some of the scripts below by providing your own following/followers lists in a text file.
 
 `tweets_only.py` -- Given either a command-line argument of one (or more) usernames, or individual usernames typed one at a time in the console if no command-line argument is given, will open a web browser to a search page showing only that user's tweets, and not their retweets.
 
