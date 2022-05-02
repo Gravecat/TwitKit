@@ -2,21 +2,20 @@
 # compares the two to list one-way follows.
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
-from sympy import im
-import twitkit_common
+import twitkit_common as tk
 
 
 def main():
     wait_before_exit = True # Set this to False to no longer wait for the user to press Enter before exiting.
 
-    following = twitkit_common.txt_to_set('twitter_following.txt')
+    following = tk.txt_to_set('twitter_following.txt')
     if not len(following):
         print('Could not read from twitter_following.txt, or file is empty. Please run twitter_update_following.py first.')
-        twitkit_common.done(wait_before_exit)
-    followers = twitkit_common.txt_to_set('twitter_followers.txt')
+        tk.done(wait_before_exit)
+    followers = tk.txt_to_set('twitter_followers.txt')
     if not len(following):
         print('Could not read from twitter_followers.txt, or file is empty. Please run twitter_check_followers.py first.')
-        twitkit_common.done(wait_before_exit)
+        tk.done(wait_before_exit)
 
     not_following_me_back = following - followers
     im_not_following = followers - following
@@ -38,7 +37,7 @@ def main():
                 'people' if len(im_not_following) != 1 else 'person',
                 ', '.join(im_not_following)))
 
-    twitkit_common.done(wait_before_exit)
+    tk.done(wait_before_exit)
 
 
 if __name__ == '__main__': main()

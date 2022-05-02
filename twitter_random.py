@@ -2,14 +2,14 @@
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
 import random
-import twitkit_common
+import twitkit_common as tk
 import webbrowser
 
 
 def main():
     tweets_only = False # Set this to True to default to only seeing the friend's tweets, not their retweets.
 
-    friends = list(twitkit_common.txt_to_set('twitter_following.txt'))
+    friends = list(tk.txt_to_set('twitter_following.txt'))
 
     print('Press Enter to visit a random friend, Q (then enter) to exit, or T to toggle tweets-only (no retweets) mode.')
     print('Tweets-only mode is currently', 'enabled.' if tweets_only else 'disabled.')
