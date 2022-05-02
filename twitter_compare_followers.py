@@ -2,6 +2,7 @@
 # compares the two to list one-way follows.
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
+from sympy import im
 import twitkit_common
 
 
@@ -25,8 +26,17 @@ def main():
         else: print('All of your follows are mutual.')
 
     else:
-        if (not_following_me_back): print('Not following you back:', ', '.join(not_following_me_back))
-        if (im_not_following): print("You're not following: ", ', '.join(im_not_following))
+        if (not_following_me_back):
+            print('{} {} not following you back: {}'.format(
+                len(not_following_me_back),
+                'people' if len(not_following_me_back) != 1 else 'person',
+                ', '.join(not_following_me_back)))
+        if (im_not_following):
+            print("{}{} {} you're not following back: {}".format(
+                '\n' if len(not_following_me_back) else '',
+                len(im_not_following),
+                'people' if len(im_not_following) != 1 else 'person',
+                ', '.join(im_not_following)))
 
     twitkit_common.done(wait_before_exit)
 
