@@ -67,6 +67,13 @@ def get_friends(api_call, type_str):
             friend_set.add(friend.screen_name)
             friend_count += 1
 
+# Saves a set to a text file, with trailing newlines.
+def set_to_txt(filename, set_data):
+    list_file = open(os.path.dirname(__file__) + '/' + filename, 'w')
+    for d in set_data:
+        list_file.write(d + '\n')
+    list_file.close()
+
 # Loads a text file, and converts it to a set of individual lines without trailing newlines.
 def txt_to_set(filename):
     try:

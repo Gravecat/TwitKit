@@ -1,7 +1,6 @@
 # twitter_check_followers.py -- Retrieves a list of the people who follow you on Twitter, and optionally compares to a previous list to check for new followers/unfollowers.
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
-import os
 import twitkit_common
 
 
@@ -19,11 +18,8 @@ def main():
     follower_set, follower_count = twitkit_common.get_friends(api.get_followers, 'followers')
 
     try:
-        list_file = open(os.path.dirname(__file__) + '/twitter_followers.txt', 'w')
-        for follower in follower_set:
-            list_file.write(follower + '\n')
-        list_file.close()
-        print('Successfully updated following list. Processed {} follower{}.'.format(follower_count, 's' if follower_count != 1 else ''))
+        twitkit_common.set_to_txt('twitter_followers.txt', follower_set)
+        print('Successfully updated followers list. Processed {} follower{}.'.format(follower_count, 's' if follower_count != 1 else ''))
     except:
         print('Could not open file for writing!')
         twitkit_common.done(wait_before_exit)
