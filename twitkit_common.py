@@ -32,7 +32,7 @@ def compare_friends(api_call, file, friend_type, wait_before_exit):
         print('Could not open file for writing!')
         done(wait_before_exit)
 
-    if not friends_old_count: done(wait_before_exit)
+    if not friends_old_count: return
 
     new_friends = friend_set - friends_old
     lost_friends = friends_old - friend_set
@@ -58,8 +58,6 @@ def compare_friends(api_call, file, friend_type, wait_before_exit):
     if not new_friend_count and not lost_friend_count:
         if friend_type == 'follower': print('\nNo followers gained or lost since last check.')
         else: print('\nNo friends added or removed since last check.')
-
-    done(wait_before_exit)
 
 
 # Finishes execution, but optionally waits for the user to press Enter first.

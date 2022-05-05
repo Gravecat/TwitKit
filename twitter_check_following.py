@@ -10,6 +10,7 @@ def main():
     api = tk.get_api()
     if (api == None): tk.done(wait_before_exit)
     tk.compare_friends(api.get_friends, 'twitter_following.txt', 'friend', wait_before_exit)
+    tk.done(wait_before_exit)
 
 
 if __name__ == '__main__': main()
