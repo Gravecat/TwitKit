@@ -1,4 +1,4 @@
-# twitter_compare_followers.py -- Takes the text-file outputs from twitter_check_followers.py and twitter_update_following.py and
+# twitter_compare_followers.py -- Takes the text-file outputs from twitter_check_followers.py and twitter_check_following.py and
 # compares the two to list one-way follows.
 # Copyright (c) 2022 Raine "Gravecat" Simmons. Released under the MIT License.
 
@@ -10,7 +10,7 @@ def main():
 
     following = tk.txt_to_set('twitter_following.txt')
     if not len(following):
-        print('Could not read from twitter_following.txt, or file is empty. Please run twitter_update_following.py first.')
+        print('Could not read from twitter_following.txt, or file is empty. Please run twitter_check_following.py first.')
         tk.done(wait_before_exit)
     followers = tk.txt_to_set('twitter_followers.txt')
     if not len(following):
