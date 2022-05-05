@@ -8,6 +8,8 @@ These are some Python tools I've written for interacting with the Twitter websit
 
 `twitter_check_followers.py` -- Retrieves a list of people following you on Twitter, and stores it in a text file. Subsequent runs of this script will compare your current followers to the last time you checked, and inform you of any new followers/unfollowers. *(API keys required.)*
 
+`twitter_check_both.py` -- Runs the scripts from `twitter_check_following.py` and `twitter_check_followers.py` (see below for details) both at the same time. *(API keys required.)*
+
 `twitter_check_following.py` -- Usng the Twitter APIs, retrieves a list of the people you are currently following and stores them in a text file. Subsequent runs of this script will compare your current following to the last time you checked, and inform you of any changes. *(API keys required.)*
 
 `twitter_compare_followers.py` -- Takes the text-file output from **twitter_check_followers.py** and **twitter_check_following.py** and compares followers, listing which accounts are not following you back, and which ones you are not following back.
