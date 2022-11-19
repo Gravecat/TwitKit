@@ -20,6 +20,10 @@ def main():
             masto_home_file.close()
         else:
             use_home = False
+    blacklist = tk.txt_to_list('tm_blacklist.txt')
+    if (len(blacklist)):
+        print('Loaded', str(len(blacklist)),'blacklist', 'entry.' if (len(blacklist) == 1) else 'entries.')
+        friends = [x for x in friends if x not in blacklist]
     
     # A list of Mastodon servers that don't use @ in their URL for usernames.
     masto_no_at = ['fedi.neon.moe']

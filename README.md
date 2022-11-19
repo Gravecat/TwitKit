@@ -4,7 +4,7 @@ These are some Python tools I've written for interacting with the Twitter websit
 
 `tm_update_list.py` -- Takes the output from `twitter_check_following.py` and a `following_accounts.csv` downloaded from Mastodon, and combines them into a combined friends file (`tm_combined_following.txt`) with a randomized order.
 
-`tm_visit_friend.py` -- Similar to `twitter_random.py` below, loads the `tm_combined_following.txt` from `tm_update_list.py` and opens the web browser to visit each user's page in sequence on their respective website, pushing them to the bottom of the list each time.
+`tm_visit_friend.py` -- Similar to `twitter_random.py` below, loads the `tm_combined_following.txt` from `tm_update_list.py` and opens the web browser to visit each user's page in sequence on their respective website, pushing them to the bottom of the list each time. Optionally, a text file `tm_blacklist.txt` can be created with a list of usernames which will be skipped.
 
 `tweets_only.py` -- Given either a command-line argument of one (or more) usernames, or individual usernames typed one at a time in the console if no command-line argument is given, will open a web browser to a search page showing only that user's tweets, and not their retweets.
 
