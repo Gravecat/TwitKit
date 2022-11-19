@@ -1,6 +1,10 @@
 # TwitKit
 
-These are some Python tools I've written for interacting with the Twitter website. You will need to provide your own API key and access token to make full use of the scripts here. If you do not already have an API key, you'll have to sign up for [a developer account](https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api). Alternatively, you can use some of the scripts below by providing your own following/followers lists in a text file.
+These are some Python tools I've written for interacting with the Twitter website, with a couple of simple additions for Mastodon. You will need to provide your own API key and access token to make full use of the scripts here. If you do not already have an API key, you'll have to sign up for [a developer account](https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api). Alternatively, you can use some of the scripts below by providing your own following/followers lists in a text file.
+
+`tm_update_list.py` -- Takes the output from `twitter_check_following.py` and a `following_accounts.csv` downloaded from Mastodon, and combines them into a combined friends file (`tm_combined_following.txt`) with a randomized order.
+
+`tm_visit_friend.py` -- Similar to `twitter_random.py` below, loads the `tm_combined_following.txt` from `tm_update_list.py` and opens the web browser to visit each user's page in sequence on their respective website, pushing them to the bottom of the list each time.
 
 `tweets_only.py` -- Given either a command-line argument of one (or more) usernames, or individual usernames typed one at a time in the console if no command-line argument is given, will open a web browser to a search page showing only that user's tweets, and not their retweets.
 

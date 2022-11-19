@@ -1,4 +1,6 @@
 __pycache__/
 apikeys.txt
+following_accounts.csv
+tm_combined_following.txt
 twitter_followers.txt
 twitter_following.txt

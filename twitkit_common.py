@@ -133,13 +133,17 @@ def set_to_txt(filename, set_data):
 
 
 # Loads a text file, and converts it to a set of individual lines without trailing newlines.
-def txt_to_set(filename):
+def txt_to_list(filename):
     try:
         txt_file = open(os.path.dirname(__file__) + '/' + filename, 'r')
         txt_list = [i.replace('\n', '') for i in txt_file.readlines()]
         txt_file.close()
-        return set(txt_list)
-    except: return set()
+        return txt_list
+    except: return []
+
+# Loads a text file, and converts it to a set of individual lines without trailing newlines.
+def txt_to_set(filename):
+    return set(txt_to_list(filename))
 
 
 if __name__ == '__main__': print('This script contains only library functions and should not be executed directly.')
